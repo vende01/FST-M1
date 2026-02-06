@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="0b55acc0-3ac5-46bf-894f-b7c6dc5a4e06" discardOkResults="false" failOnError="false" failTestCaseOnErrors="true" keepSession="false" name="XPath Assertion_Activity5" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:testStep type="request" id="e3c50b17-0a07-4663-a4bb-5431127bbf03" name="Add Request">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>CalculatorSoap12</con:interface>
+          <con:operation>Add</con:operation>
+          <con:request name="Add Request" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="14583dc9-08b0-48d2-8567-f631c5f0b2a3">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.dneonline.com/calculator.asmx</con:endpoint>
+            <con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
+   <soap:Header/>
+   <soap:Body>
+      <tem:Add>
+         <tem:intA>30</tem:intA>
+         <tem:intB>40</tem:intB>
+      </tem:Add>
+   </soap:Body>
+</soap:Envelope>]]></con:request>
+            <con:assertion type="SOAP Response" id="50d8cb75-dbf8-4930-b9bf-0dfbc9c63d95" name="SOAP Response"/>
+            <con:assertion type="Valid HTTP Status Codes" id="de60775f-cf53-4fbf-a548-871f2d3bd0de" name="Valid HTTP Status Codes">
+              <con:settings/>
+              <con:configuration>
+                <codes>200</codes>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="Schema Compliance" id="f1311d26-e15b-4e0e-94c4-0f97bd53690c" name="Schema Compliance">
+              <con:configuration/>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion" id="cedda524-8074-4863-ae7b-419eef48499b" name="Not SOAP Fault"/>
+            <con:assertion type="DataAndMetadataAssertion" id="70c1f854-a4bb-475b-8823-d4caf79c3141" name="Smart Assertion">
+              <con:configuration xsi:type="con:DataAndMetadataAssertion">
+                <con:mode>Received Data</con:mode>
+                <con:elements>
+                  <con:path>declare namespace ns1='http://tempuri.org/';
+//ns1:AddResponse[1]/ns1:AddResult[1]</con:path>
+                  <con:element>AddResult</con:element>
+                  <con:operatorId>1</con:operatorId>
+                  <con:enabled>true</con:enabled>
+                  <con:expectedValue>70</con:expectedValue>
+                  <con:caseSensitive>true</con:caseSensitive>
+                  <con:numberType>true</con:numberType>
+                </con:elements>
+                <con:originalMessage><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <AddResponse xmlns="http://tempuri.org/">
+         <AddResult>70</AddResult>
+      </AddResponse>
+   </soap:Body>
+</soap:Envelope>]]></con:originalMessage>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XQuery Match" id="cd674719-8477-450b-b09c-86da4a0680e3" name="XQuery Match">
+              <con:configuration>
+                <path>declare namespace ns1='http://tempuri.org/';
+//ns1:AddResult</path>
+                <content>70</content>
+                <allowWildcards>false</allowWildcards>
+                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                <ignoreComments>false</ignoreComments>
+              </con:configuration>
+            </con:assertion>
+            <con:credentials>
+              <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://tempuri.org/CalculatorSoap/AddRequest"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep><con:properties/><con:reportParameters/></con:testCase>
