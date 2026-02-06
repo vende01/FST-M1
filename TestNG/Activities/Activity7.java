@@ -1,60 +1,32 @@
-import java.time.Duration;
+package example;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 public class Activity7 {
-    WebDriver driver;
-    WebDriverWait wait;
-
-    @BeforeClass
-    public void setUp() {
-        // Initialize driver
-        driver = new FirefoxDriver();
-        // Initialize wait
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    public static void main(String[] args) {
+        // Create a new instance of the Firefox driver
+        WebDriver driver = new FirefoxDriver();
         // Open the page
-        driver.get("https://training-support.net/webelements/login-form");
-    }
+        driver.get("https://training-support.net/webelements/dynamic-controls");
+        // Print the title of the page
+        System.out.println("Page title: " + driver.getTitle());
 
-    @DataProvider(name = "Credentials")
-    public static Object[][] creds() {
-        return new Object[][] { 
-            { "admin1", "password1", "Invalid Credentials" },
-            { "wrongAdmin", "wrongPassword", "Invalid Credentials" }
-        };
-    }
+        // Find the text field
+        WebElement textbox = driver.findElement(By.id("textInput"));
+        // Check if it is enabled
+        System.out.println("Input field is enabled: " + textbox.isEnabled());
+        // Click the toggle button to enable it
+        driver.findElement(By.id("textInputButton")).click();
+        // Check if the text field is enabled
+        System.out.println("Input field is enabled: " + textbox.isEnabled());
+        
+        // Type something in to it
+        textbox.sendKeys("Example text");
+        System.out.println(textbox.getDomProperty("value"));
 
-    @Test(dataProvider = "Credentials")
-    public void loginTest(String username, String password, String expectedMessage) {
-        // Find the input fields and the login button
-        WebElement usernameField = driver.findElement(By.id("username"));
-        WebElement passwordField = driver.findElement(By.id("password"));
-        WebElement loginButton = driver.findElement(By.xpath("//button[text()='Submit']"));
-
-        // Clear the input fields
-        usernameField.clear();
-        passwordField.clear();
-        // Enter the credentials and click Log in
-        usernameField.sendKeys(username);
-        passwordField.sendKeys(password);
-        loginButton.click();
-
-        // Assert login message
-        String loginMessage = driver.findElement(By.id("subheading")).getText();
-        Assert.assertEquals(loginMessage, expectedMessage);
-    }
-
-    @AfterClass
-    public void tearDown() {
         // Close the browser
         driver.quit();
     }

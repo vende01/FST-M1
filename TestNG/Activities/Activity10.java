@@ -1,104 +1,42 @@
-import static org.testng.Assert.assertEquals;
-import java.io.FileInputStream;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+package example;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.openqa.selenium.interactions.Actions;
 
 public class Activity10 {
-    WebDriver driver;
-    WebDriverWait wait;
+    public static void main(String[] args) {
+        // Initialize the Firefox driver
+        WebDriver driver = new FirefoxDriver();
+        // Create the Actions object
+        Actions builder = new Actions(driver);
 
-    @BeforeClass
-    public void beforeClass() {
-        driver = new FirefoxDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // Open the page
+        driver.get("https://training-support.net/webelements/drag-drop");
+        // Print the title of the page
+        System.out.println("Page title: " + driver.getTitle());
 
-        // Open browser
-        driver.get("https://training-support.net/webelements/simple-form");
-    }
+        // Find the football
+        WebElement football = driver.findElement(By.id("ball"));
+        // Find the dropzone1
+        WebElement dropzone1 = driver.findElement(By.id("dropzone1"));
+        // Find the dropzone2
+        WebElement dropzone2 = driver.findElement(By.id("dropzone2"));
 
-    public static List<List<String>> readExcel(String filePath) {
-        List<List<String>> data = new ArrayList<List<String>>();
-        try {
-            FileInputStream file = new FileInputStream(filePath);
-
-            // Create Workbook instance holding reference to Excel file
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
-
-            // Get first sheet from the workbook
-            XSSFSheet sheet = workbook.getSheetAt(0);
-
-            // Iterate through each rows one by one
-            for (Row cells : sheet) {
-                // Temp variable
-                List<String> rowData = new ArrayList<String>();
-                for (Cell cell : cells) {
-                    // Store row data
-                    rowData.add(cell.getStringCellValue());
-                }
-                // Store row data in List
-                data.add(rowData);
-            }
-            file.close();
-            workbook.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Perform drag and drop to dropzone 1
+        builder.clickAndHold(football).moveToElement(dropzone1).pause(5000).release().build().perform();
+        if(dropzone1.findElement(By.className("dropzone-text")).getText().equals("Dropped!")) {
+        	System.out.println("Ball was dropped in Dropzone 1");
         }
-        return data;
-    }
 
-    @DataProvider(name = "Events")
-    public static Object[][] signUpInfo() {
-        String filePath = "src/test/resources/sample.xlsx";
-        List<List<String>> data = readExcel(filePath);
-        return new Object[][] { 
-            { data.get(1) },
-            { data.get(2) },
-            { data.get(3) }
-        };
-    }
+        // Perform drag and drop to dropzone 2
+        builder.dragAndDrop(football, dropzone2).pause(5000).build().perform();
+        if(dropzone2.findElement(By.className("dropzone-text")).getText().equals("Dropped!")) {
+        	System.out.println("Ball was dropped in Dropzone 2");
+        }
 
-    @Test(dataProvider = "Events")
-    public void registerTest(List<String> rows) throws InterruptedException {
-        // Find the input fields and enter text
-        WebElement fullName = driver.findElement(By.id("full-name"));
-        fullName.sendKeys(rows.get(0));
-
-        // Enter the email
-        driver.findElement(By.id("email")).sendKeys(rows.get(1));
-
-        // Enter the Date of the event
-        driver.findElement(By.name("event-date")).sendKeys(rows.get(2).replaceAll("\"", ""));
-
-        // Enter additional details
-        driver.findElement(By.id("additional-details")).sendKeys(rows.get(3));
-
-        // Click Submit
-        driver.findElement(By.xpath("//button[text()='Submit']")).click();
-        
-        // Confirm booking
-        String message = driver.findElement(By.id("action-confirmation")).getText();
-        assertEquals(message, "Your event has been scheduled!");
-
-        // Refresh the page
-        driver.navigate().refresh();
-    }
-
-    @AfterClass
-    public void tearDown() {
         // Close the browser
         driver.quit();
     }
